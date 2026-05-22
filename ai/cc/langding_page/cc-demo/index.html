@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吉马程序员 - 用代码改变未来</title>
+<style>
+  :root {
+    --bg: #06060f;
+    --bg-card: #0d0d1f;
+    --text: #c8c8dc;
+    --text-dim: #7878a0;
+    --neon-green: #00e676;
+    --neon-cyan: #00e5ff;
+    --neon-purple: #b388ff;
+    --neon-blue: #448aff;
+    --border: #1a1a3a;
+    --radius: 12px;
+    --max-w: 1200px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, var(--bg) 80%);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 20px;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 50px;
+    color: var(--neon-cyan);
+    font-size: 14px;
+    letter-spacing: 4px;
+    margin-bottom: 32px;
+    backdrop-filter: blur(4px);
+    background: rgba(0, 229, 255, 0.05);
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 7vw, 80px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.3));
+    margin-bottom: 16px;
+  }
+
+  .hero .slogan {
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    color: #fff;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(0, 229, 255, 0.5);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--neon-cyan);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+  }
+  .btn-outline:hover {
+    background: rgba(0, 229, 255, 0.08);
+    border-color: var(--neon-cyan);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-indicator span {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+  .scroll-indicator .mouse {
+    width: 24px; height: 38px;
+    border: 2px solid var(--text-dim);
+    border-radius: 12px;
+    position: relative;
+  }
+  .scroll-indicator .mouse::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 3px; height: 8px;
+    background: var(--neon-cyan);
+    border-radius: 2px;
+    animation: mouseWheel 1.6s ease infinite;
+  }
+  @keyframes mouseWheel {
+    0% { opacity: 1; top: 8px; }
+    100% { opacity: 0; top: 20px; }
+  }
+
+  /* ── Sections ── */
+  section {
+    padding: 100px 20px;
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .section-header .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border: 1px solid rgba(179, 136, 255, 0.3);
+    border-radius: 50px;
+    color: var(--neon-purple);
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+  .section-header h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #fff;
+  }
+  .section-header h2 span {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section-header .subtitle {
+    color: var(--text-dim);
+    margin-top: 12px;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* ── About ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .about-text h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .about-text p {
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    font-size: 15px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 24px 12px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .stat-item .num {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-item .label {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  .about-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .code-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .code-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  }
+  .code-card .dots {
+    display: flex; gap: 8px; margin-bottom: 20px;
+  }
+  .code-card .dots i {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .code-card .dots i:nth-child(1) { background: #ff5f57; }
+  .code-card .dots i:nth-child(2) { background: #febc2e; }
+  .code-card .dots i:nth-child(3) { background: #28c840; }
+  .code-card pre {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-card .kw  { color: var(--neon-purple); }
+  .code-card .fn  { color: var(--neon-blue); }
+  .code-card .str { color: var(--neon-green); }
+  .code-card .cmt { color: #555; font-style: italic; }
+  .code-card .tag { color: var(--neon-cyan); all: unset; font-family: inherit; font-size: inherit; border: none; padding: 0; margin: 0; letter-spacing: normal; }
+
+  /* ── Courses ── */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
+
+  .course-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .course-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    padding: 1px;
+    background: linear-gradient(135deg, transparent, transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all 0.4s ease;
+  }
+  .course-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+  .course-card:hover::before {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .course-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .course-card:nth-child(1) .course-icon { background: rgba(0, 229, 255, 0.12); }
+  .course-card:nth-child(2) .course-icon { background: rgba(179, 136, 255, 0.12); }
+  .course-card:nth-child(3) .course-icon { background: rgba(0, 230, 118, 0.12); }
+  .course-card:nth-child(4) .course-icon { background: rgba(68, 138, 255, 0.12); }
+
+  .course-card h4 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .course-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .course-tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .course-tag {
+    padding: 3px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    color: var(--neon-cyan);
+  }
+
+  /* ── Advantages ── */
+  .advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+  }
+  .advantage-item {
+    display: flex;
+    gap: 16px;
+    padding: 28px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+  }
+  .advantage-item:hover {
+    border-color: rgba(179, 136, 255, 0.3);
+    box-shadow: 0 8px 30px rgba(179, 136, 255, 0.08);
+  }
+  .advantage-icon {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .advantage-item:nth-child(1) .advantage-icon { background: rgba(0, 229, 255, 0.12); }
+  .advantage-item:nth-child(2) .advantage-icon { background: rgba(179, 136, 255, 0.12); }
+  .advantage-item:nth-child(3) .advantage-icon { background: rgba(0, 230, 118, 0.12); }
+  .advantage-item:nth-child(4) .advantage-icon { background: rgba(68, 138, 255, 0.12); }
+  .advantage-text h4 {
+    font-size: 17px;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .advantage-text p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── CTA Footer ── */
+  .cta-section {
+    text-align: center;
+    padding: 120px 20px 80px;
+    position: relative;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .cta-section p {
+    color: var(--text-dim);
+    margin-bottom: 36px;
+    font-size: 16px;
+  }
+  .cta-section .btn { font-size: 18px; padding: 16px 48px; }
+
+  .contact-info {
+    margin-top: 48px;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-dim);
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .contact-item .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 8px var(--neon-cyan);
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Animations ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-visual { order: -1; }
+    .stats { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .stat-item .num { font-size: 26px; }
+    .hero-buttons { flex-direction: column; align-items: center; }
+    .btn { width: 200px; text-align: center; }
+    .contact-info { flex-direction: column; align-items: center; gap: 16px; }
+    .courses-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    section { padding: 60px 16px; }
+    .stats { grid-template-columns: 1fr; }
+    .advantages-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <canvas id="matrix"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge reveal">NEW ERA OF CODING</div>
+    <h1 class="reveal">吉马程序员</h1>
+    <p class="slogan reveal">从零基础到高薪就业，用代码开启你的未来</p>
+    <div class="hero-buttons reveal">
+      <a href="#courses" class="btn btn-primary">查看课程</a>
+      <a href="#about" class="btn btn-outline">了解更多</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="mouse"></div>
+    <span>向下滚动</span>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="section-header reveal">
+    <div class="tag">ABOUT US</div>
+    <h2>关于<span>吉马程序员</span></h2>
+    <p class="subtitle">专注编程教育，培养面向未来的技术人才</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <h3>让每个人都能掌握编程的力量</h3>
+      <p>
+        吉马程序员成立于2020年，是一家专注于IT编程培训的教育机构。
+        我们相信编程是未来世界的通用语言。无论你是零基础小白，还是希望进阶提升的开发者，
+        这里都有适合你的成长路径。我们提供从基础入门到高级就业的全链路课程体系，
+        由一线互联网大厂资深工程师亲自授课。
+      </p>
+      <p>
+        项目驱动式教学，真实商业案例分析，手把手带你从写第一行代码到拿到心仪Offer。
+      </p>
+      <div class="stats">
+        <div class="stat-item">
+          <div class="num" data-target="3000">0</div>
+          <div class="label">累计学员</div>
+        </div>
+        <div class="stat-item">
+          <div class="num" data-target="96">0</div>
+          <div class="label">就业率 %</div>
+        </div>
+        <div class="stat-item">
+          <div class="num" data-target="50">0</div>
+          <div class="label">合作企业</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+      <div class="code-card">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <pre><span class="cmt">// 吉马程序员：你的第一行代码从这里开始</span>
+
+<span class="kw">class</span> <span class="fn">JimaProgrammer</span> {
+  <span class="kw">constructor</span>() {
+    <span class="kw">this</span>.mission = <span class="str">'让编程改变人生'</span>;
+    <span class="kw">this</span>.vision  = <span class="str">'培养未来技术领袖'</span>;
+  }
+
+  <span class="fn">learn</span>(course) {
+    <span class="kw">return</span> <span class="str">`掌握 ${course}，迈向高薪之路`</span>;
+  }
+
+  <span class="fn">grow</span>() {
+    <span class="kw">while</span> (<span class="kw">true</span>) {
+      code();
+      improve();
+      repeat();
+    }
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COURSES ═══ -->
+<section id="courses">
+  <div class="section-header reveal">
+    <div class="tag">COURSES</div>
+    <h2>热门<span>课程</span></h2>
+    <p class="subtitle">从入门到精通，总有一门适合你</p>
+  </div>
+  <div class="courses-grid">
+    <div class="course-card reveal">
+      <div class="course-icon">&#x1F4BB;</div>
+      <h4>Web前端开发</h4>
+      <p>HTML5 / CSS3 / JavaScript / React / Vue3 全家桶，掌握现代前端技术栈，成为合格的前端工程师。</p>
+      <div class="course-tags">
+        <span class="course-tag">零基础入门</span>
+        <span class="course-tag">4个月</span>
+      </div>
+    </div>
+    <div class="course-card reveal">
+      <div class="course-icon">&#x26A1;</div>
+      <h4>Java后端开发</h4>
+      <p>Java 核心 / Spring Boot / 微服务架构 / MySQL / Redis，系统学习企业级后端开发。</p>
+      <div class="course-tags">
+        <span class="course-tag">就业班</span>
+        <span class="course-tag">5个月</span>
+      </div>
+    </div>
+    <div class="course-card reveal">
+      <div class="course-icon">&#x1F4F1;</div>
+      <h4>移动端开发</h4>
+      <p>Flutter / React Native / 小程序开发，跨平台移动开发实战，一个课程掌握多端开发。</p>
+      <div class="course-tags">
+        <span class="course-tag">进阶课程</span>
+        <span class="course-tag">3个月</span>
+      </div>
+    </div>
+    <div class="course-card reveal">
+      <div class="course-icon">&#x1F916;</div>
+      <h4>AI &amp; 数据分析</h4>
+      <p>Python 基础 / 机器学习 / 深度学习 / 数据分析，紧跟AI浪潮抢占职业新赛道。</p>
+      <div class="course-tags">
+        <span class="course-tag">热门新课</span>
+        <span class="course-tag">4个月</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ADVANTAGES ═══ -->
+<section id="advantages">
+  <div class="section-header reveal">
+    <div class="tag">WHY US</div>
+    <h2>为什么选择<span>我们</span></h2>
+    <p class="subtitle">四大核心优势，为你的编程之路保驾护航</p>
+  </div>
+  <div class="advantages-grid">
+    <div class="advantage-item reveal">
+      <div class="advantage-icon">&#x1F3AF;</div>
+      <div class="advantage-text">
+        <h4>项目驱动教学</h4>
+        <p>告别纸上谈兵。每门课程都配备真实商业级项目，学完即可拥有完整作品集。</p>
+      </div>
+    </div>
+    <div class="advantage-item reveal">
+      <div class="advantage-icon">&#x1F468;&#x200D;&#x1F3EB;</div>
+      <div class="advantage-text">
+        <h4>名师一对一辅导</h4>
+        <p>授课老师均来自BAT等一线大厂，10年以上开发经验，手把手带你攻克难关。</p>
+      </div>
+    </div>
+    <div class="advantage-item reveal">
+      <div class="advantage-icon">&#x1F4C8;</div>
+      <div class="advantage-text">
+        <h4>就业全程保障</h4>
+        <p>简历优化、模拟面试、企业内推一条龙服务，96%就业率让你无后顾之忧。</p>
+      </div>
+    </div>
+    <div class="advantage-item reveal">
+      <div class="advantage-icon">&#x1F31F;</div>
+      <div class="advantage-text">
+        <h4>终身学习社群</h4>
+        <p>毕业后加入校友会，持续获取最新技术分享、行业动态和职业发展资源。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section" id="contact">
+  <div class="section-header reveal">
+    <div class="tag">JOIN US</div>
+    <h2>准备好改变了吗？</h2>
+    <p>加入吉马程序员，用代码书写你的未来</p>
+  </div>
+  <a href="#" class="btn btn-primary reveal">立即报名</a>
+  <div class="contact-info reveal">
+    <div class="contact-item"><span class="dot"></span> 微信：jima_coder</div>
+    <div class="contact-item"><span class="dot"></span> 电话：400-888-8888</div>
+    <div class="contact-item"><span class="dot"></span> 邮箱：hello@jima.dev</div>
+  </div>
+</section>
+
+<div class="footer-bottom">&copy; 2026 吉马程序员 &mdash; 用代码改变未来</div>
+
+<script>
+(function() {
+  // ── Matrix Rain ──
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+
+  let w, h, cols, drops;
+  const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]()<>/\\|=+-*/;&#@$%!?';
+  const fontSize = 14;
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+    cols = Math.floor(w / fontSize);
+    drops = [];
+    for (let i = 0; i < cols; i++) drops[i] = Math.random() * -h;
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(6, 6, 15, 0.06)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#0a2a15';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
+
+      // bright head
+      ctx.fillStyle = '#00e676';
+      ctx.fillText(ch, x, y);
+
+      // dimmer body (a few chars above)
+      ctx.fillStyle = 'rgba(0, 230, 118, 0.15)';
+      for (let j = 1; j <= 4; j++) {
+        const above = y - j * fontSize;
+        if (above > 0) ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, above);
+      }
+
+      drops[i]++;
+      if (drops[i] * fontSize > h && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+    }
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  let animId;
+  (function loop() { draw(); animId = requestAnimationFrame(loop); })();
+
+  // ── Scroll Reveal ──
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+  // ── Number Counter ──
+  const numObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = +el.getAttribute('data-target');
+      if (el._counted) return;
+      el._counted = true;
+
+      const duration = 1800;
+      const start = performance.now();
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // easeOutExpo
+        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.num[data-target]').forEach(function(el) { numObserver.observe(el); });
+
+  // ── Parallax glow on hero ──
+  var hero = document.querySelector('.hero');
+  var heroContent = document.querySelector('.hero-content');
+  hero.addEventListener('mousemove', function(e) {
+    var rect = hero.getBoundingClientRect();
+    var cx = e.clientX - rect.left;
+    var cy = e.clientY - rect.top;
+    heroContent.style.setProperty('--mx', cx + 'px');
+    heroContent.style.setProperty('--my', cy + 'px');
+  });
+})();
+</script>
+
+</body>
+</html>
