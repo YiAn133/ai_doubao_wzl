@@ -1,0 +1,19 @@
+{
+    "users": [
+    {
+        "id":1,
+        "name":"张三",
+        "homeTown":"杭州"
+    },
+    {
+        "id":2,
+        "name":"李四",
+        "homeTown":"北京"
+    },
+    {
+        "id":3,
+        "name":"王五",
+        "homeTown":"上海"
+    }
+]
+}
