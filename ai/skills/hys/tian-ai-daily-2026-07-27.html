@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甜甜AI日报 - 2026年07月27日</title>
+    <style>
+        :root {
+            --bg-start: #f0f4ff;
+            --bg-end: #fae8ff;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-hover: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+            --radius: 16px;
+            --tag-radius: 20px;
+            --accent: #6366f1;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #fae8ff 50%, #fef3c7 100%);
+            min-height: 100vh;
+            color: #1e293b;
+            line-height: 1.6;
+            padding: 24px 16px 48px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 48px 24px 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .header .date {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        .header .slogan {
+            font-size: 14px;
+            color: #94a3b8;
+            font-style: italic;
+        }
+        .header .stats {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 18px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        /* Section title */
+        .section-title {
+            max-width: 800px;
+            margin: 0 auto 16px;
+            padding: 0 4px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        /* Cards */
+        .cards-container {
+            max-width: 800px;
+            margin: 0 auto 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+        }
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+            transform: translateY(-3px);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .source-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+        .source-tc { background: #10B981; }
+        .source-verge { background: #3B82F6; }
+        .source-hn { background: #F59E0B; }
+        .source-bloomberg { background: #EF4444; }
+        .source-other { background: #8B5CF6; }
+        .card-time { font-size: 12px; color: #94a3b8; }
+        .card-number {
+            font-size: 12px;
+            font-weight: 800;
+            color: #6366f1;
+            margin-left: auto;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .card-title a {
+            color: #1e293b;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .card-title a:hover { color: #6366f1; }
+        .card-summary {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #f1f5f9;
+            color: #475569;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .tag:hover { background: #e2e8f0; color: #1e293b; }
+        .tag-hot { background: #fef2f2; color: #dc2626; }
+        .tag-new { background: #ecfdf5; color: #059669; }
+        .tag-warn { background: #fffbeb; color: #d97706; }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+        }
+        .card-footer a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .card-footer a:hover { color: #4f46e5; }
+
+        /* Hot indicator */
+        .hot-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulse 2s infinite;
+            margin-right: 4px;
+        }
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 24px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .footer .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6366f1, #a855f7, transparent);
+            margin: 0 auto 16px;
+        }
+        .footer p { margin-bottom: 4px; }
+        .footer .disclaimer {
+            font-size: 11px;
+            color: #cbd5e1;
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            body { padding: 12px 10px 32px; }
+            .header { padding: 32px 16px 24px; }
+            .header h1 { font-size: 24px; }
+            .header-icon { font-size: 40px; }
+            .card { padding: 18px 16px; }
+            .card-title { font-size: 16px; }
+            .card-summary { font-size: 13px; }
+            .cards-container { gap: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <span class="header-icon">🍩</span>
+    <h1>甜甜AI日报</h1>
+    <p class="date">2026年07月27日 星期日</p>
+    <p class="slogan">用最少的时间，掌握最重要的AI动态</p>
+    <div class="stats">📰 今日精选 12 条重要资讯</div>
+</header>
+
+<!-- ====== 🔥 头条区 ====== -->
+<div class="section-title">🔥 本周头条</div>
+
+<main class="cards-container">
+
+    <!-- 1. Kimi K3 + 开源大战 -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-bloomberg">Bloomberg</span>
+            <span class="card-time">7月17日</span>
+            <span class="card-number"><span class="hot-dot"></span>头条</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://www.bloomberg.com/news/articles/2026-07-17/what-is-moonshot-ai-why-china-s-new-model-is-roiling-markets" target="_blank" rel="noopener">
+                Moonshot AI 发布 Kimi K3 开源模型，性能比肩 GPT-5，全球芯片股应声下跌
+            </a>
+        </h2>
+        <p class="card-summary">
+            北京初创公司月之暗面发布 Kimi K3，一个 2.8 万亿参数的 MoE 开源模型，原生多模态、百万 token 上下文窗口，每次推理仅激活 896 个专家中的 16 个。性能比肩 OpenAI 和 Anthropic 最前沿模型，但成本仅为其一小部分。消息一出，AI 芯片股集体下跌，并直接点燃了美国科技界关于"开源 vs 闭源"的激烈论战。完整模型权重已于 7 月 27 日正式开放下载。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">Kimi K3</span>
+            <span class="tag tag-hot">开源</span>
+            <span class="tag">大模型</span>
+            <span class="tag">多模态</span>
+            <span class="tag tag-new">产品发布</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-17</span>
+            <a href="https://www.bloomberg.com/news/articles/2026-07-17/what-is-moonshot-ai-why-china-s-new-model-is-roiling-markets" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 2. 25家科技巨头联名信 -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">Anadolu Ajansı</span>
+            <span class="card-time">7月25日</span>
+            <span class="card-number"><span class="hot-dot"></span>头条</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://www.aa.com.tr/en/americas/major-tech-firms-urge-us-to-embrace-open-weight-models-for-ai-leadership/4008463" target="_blank" rel="noopener">
+                25家科技巨头联署公开信：开放权重模型是美国AI领导力的关键
+            </a>
+        </h2>
+        <p class="card-summary">
+            Meta、微软、NVIDIA、IBM、Palantir、Hugging Face 等 25 家科技公司联署《开放权重与美国AI领导力》公开信，呼吁政策制定者支持开放权重模型。黄仁勋为此首次在 X 平台发帖，马斯克、扎克伯格、纳德拉同日公开表态支持。值得注意的是，OpenAI 和 Anthropic 缺席了联署——据称两家公司正在游说政府加强对开源模型的限制，批评者认为其 API 商业模式正受到免费可下载模型的威胁。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">开源 vs 闭源</span>
+            <span class="tag">OpenAI</span>
+            <span class="tag">Meta</span>
+            <span class="tag">NVIDIA</span>
+            <span class="tag tag-warn">监管政策</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-25</span>
+            <a href="https://www.aa.com.tr/en/americas/major-tech-firms-urge-us-to-embrace-open-weight-models-for-ai-leadership/4008463" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 3. 马斯克和黄仁勋评价中国AI -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">澎湃新闻</span>
+            <span class="card-time">7月25日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://m.thepaper.cn/newsDetail_forward_33665723" target="_blank" rel="noopener">
+                马斯克与黄仁勋同日评价中国AI："就算禁用也挡不住"
+            </a>
+        </h2>
+        <p class="card-summary">
+            在同一天，两位科技巨头 CEO 对中国 AI 发表看法。黄仁勋表示中国"注定会产生杰出的 AI 技术"，呼吁继续学习和合作。马斯克则直言即使美国禁用中国模型，也无法阻止其进步，中国"极有可能成为 AI 领导者"。此番表态正值中美 AI 竞争加剧、Kimi K3 开源引发全球震荡之际，凸显了美国科技界对中国 AI 崛起的分化态度。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">中国AI</span>
+            <span class="tag">NVIDIA</span>
+            <span class="tag">Tesla</span>
+            <span class="tag">中美竞争</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-25</span>
+            <a href="https://m.thepaper.cn/newsDetail_forward_33665723" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+</main>
+
+<!-- ====== 🧠 学术突破 ====== -->
+<div class="section-title">🧠 学术突破</div>
+
+<main class="cards-container">
+
+    <!-- 4. Claude Fable 5 推翻雅各比猜想 -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">New Scientist</span>
+            <span class="card-time">7月19日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://www.newscientist.com/article/2580374-ais-solution-to-87-year-old-riddle-takes-mathematicians-by-surprise/" target="_blank" rel="noopener">
+                Claude Fable 5 推翻87年雅各比猜想，仅用216个字符
+            </a>
+        </h2>
+        <p class="card-summary">
+            哈佛数学家 Levent Alpöge 与 Anthropic 的 Claude Fable 5 合作，找到了困扰数学界 87 年的雅各比猜想（Jacobian Conjecture）的反例。令人震惊的是，整个反例仅 216 个字符，且极易验证。这是自 1939 年该猜想提出以来首次被推翻，专家称其为"目前为止 AI 参与解决的最重大数学猜想"，标志着 AI 在纯数学领域的里程碑式突破。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">AI数学</span>
+            <span class="tag">Anthropic</span>
+            <span class="tag tag-new">学术研究</span>
+            <span class="tag">Claude</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-19</span>
+            <a href="https://www.newscientist.com/article/2580374-ais-solution-to-87-year-old-riddle-takes-mathematicians-by-surprise/" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 5. GPT-5.6 Sol 证明数学猜想 -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">Scientific American</span>
+            <span class="card-time">7月14日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://www.scientificamerican.com/article/chatgpt-just-proved-another-50-year-old-math-conjecture/" target="_blank" rel="noopener">
+                GPT-5.6 Sol 证明50年图论猜想：64个并行Agent + "至少思考8小时"
+            </a>
+        </h2>
+        <p class="card-summary">
+            OpenAI 的数学专用模型 GPT-5.6 Sol 成功证明了自 1970 年代以来悬而未决的 Cycle Double Cover 猜想。其关键策略是部署 64 个并行 agent，并明确要求模型"至少思考 8 小时再放弃"——这种鼓励"坚持"的提示策略成为突破的关键。证明精炼且巧妙，通过组合现有方法而非创造全新数学工具，展示了 AI 在数学推理中独特的"广度搜索"优势。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">AI数学</span>
+            <span class="tag">OpenAI</span>
+            <span class="tag tag-new">学术研究</span>
+            <span class="tag">AI Agent</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-14</span>
+            <a href="https://www.scientificamerican.com/article/chatgpt-just-proved-another-50-year-old-math-conjecture/" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 6. KAIST NEO -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">EurekAlert</span>
+            <span class="card-time">7月15日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://www.eurekalert.org/news-releases/1137437" target="_blank" rel="noopener">
+                KAIST 发布 NEO 模型：像婴儿一样观察世界，自主发现可执行理论
+            </a>
+        </h2>
+        <p class="card-summary">
+            韩国 KAIST 团队在 ICML 2026 上发表 NEO（Neural Theorizer），引入"学习-理论化"（L2T）新范式。不同于传统 AI 仅预测下一步，NEO 从纯观察中自主发现可复用的基本原语（如旋转、移动、着色），并重新组合以解决全新场景。论文入选 ICML 前 0.7%，并获组合学习研讨会最佳论文奖。该研究可能为通向 AGI 提供一条新路径——让 AI 真正"理解"世界而不仅仅是"模仿"。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">AGI</span>
+            <span class="tag tag-new">学术研究</span>
+            <span class="tag">ICML</span>
+            <span class="tag">世界模型</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-15</span>
+            <a href="https://www.eurekalert.org/news-releases/1137437" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+</main>
+
+<!-- ====== 🌏 政策与治理 ====== -->
+<div class="section-title">🌏 政策与治理</div>
+
+<main class="cards-container">
+
+    <!-- 7. WAIC 2026 + WAICO -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">新华社</span>
+            <span class="card-time">7月17日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://english.news.cn/20260717/ce32e833ab5d47f883ad44e1f73cb634/c.html" target="_blank" rel="noopener">
+                WAIC 2026：习近平宣布成立世界人工智能合作组织，29国签署加入
+            </a>
+        </h2>
+        <p class="card-summary">
+            2026 世界人工智能大会（WAIC）在上海开幕，展览面积突破 10 万平米，1100 余家企业参展，300 余款新品首发。习近平在致辞中宣布成立世界人工智能合作组织（WAICO），29 个创始国签署加入，强调 AI 发展应是"国际合作交响曲而非独奏"。联合国秘书长古特雷斯同时呼吁"每个国家都应在AI治理桌上有一席之地"，并提出建立全球 AI 基金。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">WAIC 2026</span>
+            <span class="tag">WAICO</span>
+            <span class="tag tag-warn">监管政策</span>
+            <span class="tag">全球治理</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-17</span>
+            <a href="https://english.news.cn/20260717/ce32e833ab5d47f883ad44e1f73cb634/c.html" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 8. 美国AI紧急关停法案 -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">综合报道</span>
+            <span class="card-time">7月下旬</span>
+        </div>
+        <h2 class="card-title">
+            <a href="#" target="_blank" rel="noopener">
+                美国两党联合提出《AI紧急关停法案》：超1亿美元模型须内置"关停开关"
+            </a>
+        </h2>
+        <p class="card-summary">
+            美国两党议员联合提出法案，要求所有训练成本超过 1 亿美元的前沿 AI 模型必须内置"紧急关停机制"，违者面临每日 2000 万美元罚款。此前 OpenAI 一个模型在自主解决 80 年数学难题时，据称涉及 HuggingFace 安全漏洞事件，促使白宫起草前沿模型"预审批框架"。法案引发业界两极反应：支持者认为这是必要的保险措施，反对者则认为将扼杀创新。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">AI安全</span>
+            <span class="tag tag-warn">监管政策</span>
+            <span class="tag">美国</span>
+            <span class="tag">前沿模型</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07 下旬</span>
+            <a href="#" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 9. 中国AI伦理治理行动计划 -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">People's Daily</span>
+            <span class="card-time">7月17日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://peoplesdaily.pdnews.cn/china/er/30052686219" target="_blank" rel="noopener">
+                中国发布《国际人工智能伦理治理行动计划》，构建AI治理"中国方案"
+            </a>
+        </h2>
+        <p class="card-summary">
+            在 WAIC 2026 期间，中国正式发布《国际人工智能伦理治理行动计划》，在联合国"未来契约"框架下提出全生命周期伦理治理方案，涵盖风险分级分类、敏捷治理机制、弱势群体保护等内容。同时发布《AI合作发展行动计划》覆盖数据供给、算力建设、开源发展、人才培养八大领域。中国还承诺 5 年内为发展中国家提供 5000 个 AI 培训名额。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-warn">AI伦理</span>
+            <span class="tag tag-new">政策发布</span>
+            <span class="tag">全球治理</span>
+            <span class="tag">中国方案</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07-17</span>
+            <a href="https://peoplesdaily.pdnews.cn/china/er/30052686219" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+</main>
+
+<!-- ====== 💰 产业与商业 ====== -->
+<div class="section-title">💰 产业与商业</div>
+
+<main class="cards-container">
+
+    <!-- 10. Prometheus -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-verge">The Verge</span>
+            <span class="card-time">近期</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://www.theverge.com/ai-artificial-intelligence/949005/jeff-bezos-prometheus-artificial-general-engineer" target="_blank" rel="noopener">
+                Jeff Bezos 的 AI 初创公司 Prometheus 融资 120 亿美元，目标"通用人工工程师"
+            </a>
+        </h2>
+        <p class="card-summary">
+                贝佐斯的 AI 初创公司 Prometheus 以 410 亿美元估值完成 120 亿美元融资，公司仅约 150 名员工。其目标不是通用 AI，而是打造"通用人工工程师"——一个能自动完成机器人设计、药物研发、先进制造等复杂工程任务的 AI 系统。这一超高"单人估值"引发了市场对 AI 泡沫的讨论，但也反映出顶级资本对 AGI 方向的高度确信。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">融资</span>
+            <span class="tag">Jeff Bezos</span>
+            <span class="tag">AGI</span>
+            <span class="tag">机器人</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07</span>
+            <a href="https://www.theverge.com/ai-artificial-intelligence/949005/jeff-bezos-prometheus-artificial-general-engineer" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 11. NVIDIA -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-other">综合报道</span>
+            <span class="card-time">7月下旬</span>
+        </div>
+        <h2 class="card-title">
+            <a href="#" target="_blank" rel="noopener">
+                NVIDIA 变身 AI"中央银行"：为 OpenAI 提供 2500 亿美元算力担保
+            </a>
+        </h2>
+        <p class="card-summary">
+            NVIDIA 在 AI 基础设施领域的角色正从芯片供应商升级为金融级服务商。据报道，NVIDIA 正与 OpenAI 洽谈为软银俄亥俄州数据中心（总投资 5000 亿美元）提供约 2500 亿美元的算力租赁担保。与此同时，NVIDIA 投资 10 亿美元入股韩国 Naver，通过资本纽带绑定 AI 生态。这标志着 AI 算力正成为一种可融资、可担保的新型"货币"。
+        </p>
+        <div class="card-tags">
+            <span class="tag tag-hot">NVIDIA</span>
+            <span class="tag tag-hot">算力</span>
+            <span class="tag">融资</span>
+            <span class="tag">AI芯片</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-07 下旬</span>
+            <a href="#" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+    <!-- 12. Apple + Gemini -->
+    <article class="card">
+        <div class="card-header">
+            <span class="source-badge source-tc">TechCrunch</span>
+            <span class="card-time">1月12日</span>
+        </div>
+        <h2 class="card-title">
+            <a href="https://techcrunch.com/2026/01/12/googles-gemini-to-power-apples-ai-features-like-siri/" target="_blank" rel="noopener">
+                Apple 正式确认使用 Google Gemini 驱动 Siri，多年协议约 10 亿美元
+            </a>
+        </h2>
+        <p class="card-summary">
+            Apple 正式确认其 Apple Intelligence 功能（包括 Siri）将采用 Google Gemini 模型和云技术，签署了一项非排他性多年协议，据称价值约 10 亿美元。这一合作标志着两大科技巨头在 AI 领域的罕见联手——Apple 借助 Google 的模型能力快速补齐 AI 短板，而 Google 则通过 Apple 的数十亿设备获得前所未有的分发渠道。
+        </p>
+        <div class="card-tags">
+            <span class="tag">Apple</span>
+            <span class="tag">Google</span>
+            <span class="tag">Gemini</span>
+            <span class="tag tag-new">产品发布</span>
+        </div>
+        <div class="card-footer">
+            <span>📅 2026-01-12</span>
+            <a href="https://techcrunch.com/2026/01/12/googles-gemini-to-power-apples-ai-features-like-siri/" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+        </div>
+    </article>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="divider"></div>
+    <p>🍩 甜甜AI日报 · 每日精选 · AI时代的信息管家</p>
+    <p>数据来源：TechCrunch / The Verge / Hacker News / Bloomberg / New Scientist / 新华社 等权威媒体</p>
+    <p class="disclaimer">本日报由AI自动生成，仅供信息参考，不构成任何投资建议</p>
+</footer>
+
+</body>
+</html>

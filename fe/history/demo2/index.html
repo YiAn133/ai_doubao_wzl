@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA</title>
+</head>
+<body>
+    <header>
+          <nav>
+            <ul>
+                <li><a  href="#/page1">页面一</a></li>
+                <li><a  href="#/page2">页面二</a></li>
+                <li><a  href="#/page3">页面三</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="container"></div>
+    <script>
+        class HashRouter{
+            constructor(){//这个是构造方法
+                // this指向实例的对象
+                this.routers = {};//这个是变量
+                window.addEventListener('hashchange' , 
+                // this指向window
+                // bind：是一个方法返回一个新函数，修改this的指向，返回的新函数不会立刻执行
+                this.load.bind(this)
+                // this.load是指拿到这个类中方法，因为这里是window绑定的hashchange事件，故而
+                // 只是this.load的时候得到的this是window，这里是把实例化的this绑定在load中
+            )
+            }
+            register(hash , callback){
+                this.routers[hash] = callback
+            }
+            load(){
+                console.log(this);
+                let hash = location.hash.slice(1);
+                let handler;
+                if(!hash){
+
+                }else{
+                    handler = this.routers[hash];
+                }
+                handler.call(this);
+                console.log(hash);
+            }
+        }
+        // 挂载点 只需要动态修改它
+        let container = document.getElementById('container')
+        // 前端路由
+         const router = new HashRouter();
+        router.register('/page1', () => container.innerHTML = '页面一')
+        router.register('/page2', () => container.innerHTML = '页面二')
+        router.register('/page3', () => container.innerHTML = '页面三')
+    </script>
+</body>
+</html>

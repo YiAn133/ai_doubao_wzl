@@ -1,0 +1,23 @@
+import * as React from 'react';
+
+import {
+    //这里导入的是要限定类型（有两类type interface）的 所以要加type
+    type Color
+}from '../model/color';
+
+interface Props{
+    color:Color;
+}
+
+const ColorBrower:React.FC<Props> = (props) => {
+    const divStyle:React.CSSProperties = {
+        "width" : "11rem",
+        "height" : "7rem",
+        backgroundColor:`rgb(${props.color.red} , ${props.color.green} , ${props.color.blue})`
+    }
+    return (
+        <div style={divStyle}></div>
+    )
+}
+
+export default ColorBrower;

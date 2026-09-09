@@ -1,0 +1,13 @@
+{
+  "name": "basic",
+  "version": "1.0.0",
+  "description": "- 响应式数据状态\r - hooks 函数式编程\r - （）里面的参数 可以是初始值也可以是函数\r - 返回值是数组[state,setState]",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

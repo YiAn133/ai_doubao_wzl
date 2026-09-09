@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甜甜AI日报</title>
+    <style>
+        :root {
+            --bg-start: #f0f4ff;
+            --bg-end: #fae8ff;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+            --radius: 16px;
+            --tag-radius: 20px;
+            --source-tc: #10B981;
+            --source-verge: #3B82F6;
+            --source-hn: #F59E0B;
+            --source-other: #8B5CF6;
+            --accent: #6366f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 50%, #fef3c7 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 24px 16px 48px;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            text-align: center;
+            padding: 48px 24px 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .header .date {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .header .slogan {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .header .stats {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 18px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ===== Cards Container ===== */
+        .cards-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ===== News Card ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .source-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .source-tc { background-color: var(--source-tc); }
+        .source-verge { background-color: var(--source-verge); }
+        .source-hn { background-color: var(--source-hn); }
+        .source-other { background-color: var(--source-other); }
+
+        .card-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .card-title a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .card-title a:hover {
+            color: var(--accent);
+        }
+
+        .card-summary {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: var(--tag-radius);
+            font-size: 12px;
+            font-weight: 500;
+            background: #f1f5f9;
+            color: #475569;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .tag:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .tag-hot {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .tag-new {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .card-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .card-footer a:hover {
+            color: #4f46e5;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 40px 24px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), #a855f7, transparent);
+            margin: 0 auto 16px;
+        }
+
+        .footer p {
+            margin-bottom: 4px;
+        }
+
+        .footer .disclaimer {
+            font-size: 11px;
+            color: #cbd5e1;
+            margin-top: 8px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px 10px 32px;
+            }
+
+            .header {
+                padding: 32px 16px 24px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header-icon {
+                font-size: 40px;
+            }
+
+            .card {
+                padding: 18px 16px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .card-summary {
+                font-size: 13px;
+            }
+
+            .cards-container {
+                gap: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <span class="header-icon">🍩</span>
+        <h1>甜甜AI日报</h1>
+        <p class="date">2026年07月27日 星期二</p>
+        <p class="slogan">用最少的时间，掌握最重要的AI动态</p>
+        <div class="stats">📰 今日精选 10 条重要资讯</div>
+    </header>
+
+    <!-- Cards Container -->
+    <main class="cards-container">
+
+        <!-- 示例卡片 -->
+        <article class="card">
+            <div class="card-header">
+                <span class="source-badge source-tc">TechCrunch</span>
+                <span class="card-time">3小时前</span>
+            </div>
+            <h2 class="card-title">
+                <a href="#" target="_blank" rel="noopener">Anthropic 发布 Claude 5 系列模型，多项基准测试刷新纪录</a>
+            </h2>
+            <p class="card-summary">
+                Anthropic 正式发布 Claude 5 系列模型，在推理能力和代码生成方面大幅提升，在多个权威基准测试中超越竞争对手。此次更新标志着 AI 竞赛进入新阶段，企业级 AI 应用的门槛将进一步降低。
+            </p>
+            <div class="card-tags">
+                <span class="tag tag-hot">大模型</span>
+                <span class="tag">Anthropic</span>
+                <span class="tag tag-new">产品发布</span>
+                <span class="tag">AI编程</span>
+            </div>
+            <div class="card-footer">
+                <span>📅 2026-07-27 09:30</span>
+                <a href="#" target="_blank" rel="noopener">🔗 阅读原文 →</a>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="divider"></div>
+        <p>🍩 甜甜AI日报 · 每日精选 · AI时代的信息管家</p>
+        <p>数据来源：TechCrunch / The Verge / Hacker News 等权威科技媒体</p>
+        <p class="disclaimer">本日报由AI自动生成，仅供信息参考，不构成任何投资建议</p>
+    </footer>
+
+</body>
+</html>

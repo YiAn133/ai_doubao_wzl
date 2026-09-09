@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- 换句话说，这其实就是想表示Promise.all，方法 -->
+     <script>
+            function f1() {
+                return fetch('');
+            }
+
+            function f2() {
+                return fetch('');
+            }
+
+            // Promise.all 返回的是一个普通数组，但是里面的元素和你调用的方法有关，
+            // 这里返回的是Response数组
+            async function main() {
+                const responseArr = await Promise.all([f1(), f2()]);
+                const PromiseArr = responseArr.map(item => item.json());
+
+                const newArr = await Promise.all(PromiseArr);
+                console.log(newArr);
+                
+
+            }    
+   
+
+     </script>
+    
+</body>
+</html>

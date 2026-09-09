@@ -1,0 +1,20 @@
+import { Link } from 'react-router-dom'
+import { useAuthStore } from '../store/user' 
+
+export default function Nav(){
+    const token = useAuthStore(state => state.token)
+    const logout = useAuthStore(state => state.logout)
+    const handleLogout = () => {
+        logout();
+    }
+    return (
+        <nav style={{padding: 0, borderBottom: '1px solid #ccc'}}>
+      <Link to="/">Home</Link>
+      <br />
+      <Link to="/pay">Pay</Link>
+      <br />
+      {!token && <Link to="/login">Login</Link>}
+      {token && <button onClick={handleLogout}>Logout</button>}
+       </nav>
+    )
+}
