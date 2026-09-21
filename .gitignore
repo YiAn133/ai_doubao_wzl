@@ -25,6 +25,9 @@ yarn-debug.log*
 .turbo/
 .pnpm-store
 
+# ===== 本地运行时产物（会话记忆落盘文件）=====
+chat_history.json
+
 # ===== Docker 容器运行数据（数据库/对象存储持久化文件，体积大且为本地运行时状态）=====
 volumes/
 **/volumes/
