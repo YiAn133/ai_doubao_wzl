@@ -3,7 +3,7 @@ import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { 
   HumanMessage,
   AIMessage, 
-  trimMessages  // langchain 自带的history 裁剪工具， 留下最近的
+  trimMessages  // langchain 自带的history 裁剪工具， 留下最近的，自动**删除头部旧消息**，把消息数组的总 token 控制在 `maxTokens` 以内；**不会调用 LLM，不做摘要，只是删消息**。
   // 被裁剪的老消息 （总结）， 留下来的来（history clear, 新的messages ）
 } from '@langchain/core/messages';
 // token 计算的 
@@ -23,6 +23,7 @@ async function messageCountTruncation() {
     { type: 'ai', content: 'UI/UX 设计非常重要，好的用户体验能让产品更成功！' },
   ];
 
+  // 把消息放入内存存储中
   for (const msg of messages) {
     if (msg.type === 'human') {
       await history.addMessage(new HumanMessage(msg.content));
@@ -35,18 +36,10 @@ async function messageCountTruncation() {
   const trimmedMessages = allMessages.slice(-maxMessages);
   console.log(`保留消息数量：${trimmedMessages.length}`);
   console.log(`保留的消息：`,trimmedMessages.map(
+    // m.constructor.name表示构造函数的类名是什么
     m => `${m.constructor.name}: ${m.content}`).join('\n'))
 }
-// messages token 计算
-function countTokens(messages, encoder) {
-  let total = 0;
-  for (const msg of messages) {
-    const content = typeof msg.content === 'string'? msg.content : 
-    JSON.stringify(msg.content)
-    total += encoder.encode(content).length;
-  }
-  return total;
-}
+
 
 async function tokenCountTruncation() {
   const history = new InMemoryChatMessageHistory();
@@ -68,6 +61,18 @@ async function tokenCountTruncation() {
       await history.addMessage(new AIMessage(msg.content));
     }
   }
+
+
+  // messages token 计算
+function countTokens(messages, encoder) {
+  let total = 0;
+  for (const msg of messages) {
+    const content = typeof msg.content === 'string'? msg.content : 
+    JSON.stringify(msg.content)
+    total += encoder.encode(content).length;
+  }
+  return total;
+}
 
   let allMessages = await history.getMessages();
   const enc = getEncoding("cl100k_base");// 编码
