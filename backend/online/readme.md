@@ -11,7 +11,7 @@
 - 前后端分离项目
     - 前端： react + ts 产出
         组件
-        npm run duild dist/ 静态资源文件
+        npm run build dist/ 静态资源文件
 - 后端
     - /api接口 返回json
 ## 部署全流程
@@ -60,3 +60,10 @@ Nginx做3个事情：
 - html项目 安装nginx
 - 安装Mysql
     - 建立 dev/production 俩个库
+
+## 项目在本地跑起来
+## 前端
+- 瀑布流（小红书） 经典复杂的前端用户体验，无限滚动
+### 后端
+- .env
+- npm run dev
