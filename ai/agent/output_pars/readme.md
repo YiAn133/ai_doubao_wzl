@@ -71,3 +71,10 @@ parse.parse
 ## 总结
 - JsonOutputParser：只管输出 JSON，字段要你手写。
 - StructuredOutputParser：你定义字段，**自动帮你生成字段说明 + JSON 格式要求**。
+
+
+## langchain 封装了model.withStructureOutput(schema)高级API ，内部实现是通过tool_call，让大模型格式化输出
+
+
+既然如此output-parser 模块是不是可以丢掉了？
+不可以 ，因为格式化输出，不只是JSON格式，还有XML,YAML等
