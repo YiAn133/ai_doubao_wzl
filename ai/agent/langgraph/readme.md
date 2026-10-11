@@ -90,4 +90,245 @@ console.log(result);
 
 
 ## 分支 循环
+分析了下 如何进行分支 和 循环
+import {
+    Annotation,//定义共享数据长什么样子的，更新怎么合并
+    END,
+    START,
+    StateGraph//工作流蓝图构建器
+}from '@langchain/langgraph'
 
+const StateAnnotation = Annotation.Root({
+    query:Annotation({//定义text字段
+        default:() => "",//默认值
+        reducer:(_prev , next) => next//定义旧值和新值如何改变，这里是之间覆盖
+    }),
+
+    route:Annotation({
+        reducer:(_prev , next) => next
+        ,default:() => "chat"
+    }),
+    answer:Annotation({
+        reducer:(_prev,next) => next,
+        default:() => ""
+    })
+})
+
+// 节点申明
+const router = (state) => {
+    const isMath = /[+\-*]/.test(state.query)
+
+    return {route:isMath ? "math" : "chat"}
+}
+
+const mathNode = (state) => {
+    try {
+        return{ answer : String(eval(state.query)) }
+    } catch (error) {
+        return {answer:"表达式无法计算"}
+    }
+}
+
+const chatNode = (state) => {
+    return {answer:`你说的是${state}`}
+}
+
+const graph = new StateGraph(StateAnnotation).
+addNode("router",router).
+addNode("math",mathNode).
+addNode("chat",chatNode).
+addEdge(START,"router").
+addConditionalEdges("router",(state) => state.route , {math:'math',chat:'chat'}).
+addEdge("math",END).
+addEdge("chat",END).compile()
+
+const drawable = await graph.getGraphAsync();
+const mermaid = drawable.drawMermaid({withStyles:true})
+
+console.log(mermaid);
+
+console.log("result",await graph.invoke({query:"1+2"}));
+
+
+
+import {
+    Annotation,//定义共享数据长什么样子的，更新怎么合并
+    END,
+    START,
+    StateGraph//工作流蓝图构建器
+}from '@langchain/langgraph'
+
+const StateAnnotation = Annotation.Root({
+    tries:Annotation({
+        reducer:(_perv,next) => next,
+        default: () => 0
+    }),
+    ok:Annotation({
+        reducer:(_prev,next) => next,
+        default: () => false
+    }),
+    message:Annotation({
+        reducer:(_prev,next) => next,
+        default: () => ''
+    })
+})
+ 
+const attempt = (state) => {
+    const tries = state.tries + 1;
+    const ok = tries >= 3;
+    return {
+        tries,
+        ok,
+        message:ok ? `第${tries}次成功` : `第${tries}次成功`
+    }
+}
+const graph = new StateGraph(StateAnnotation).addNode("attempt" , attempt).addEdge(START,"attempt").
+addConditionalEdges("attempt",(state) =>state.ok  ? "done":"retry",{
+    retry:"attempt",
+    done:END
+}).compile()
+
+const drawable = await graph.getGraphAsync()
+
+const mermaid = drawable.drawMermaid({withStyles:true})
+
+console.log(mermaid);
+
+console.log('result:',await graph.invoke({tries:0}));
+
+
+## 持久化我们的状态？
+
+用MemorySaver 来把state 保存到内存中 可以保存上一次运行的状态
+import {
+    Annotation,//定义共享数据长什么样子的，更新怎么合并
+    END,
+    MemorySaver,
+    START,
+    StateGraph,//工作流蓝图构建器,
+   
+}from '@langchain/langgraph'
+
+const StateAnnotation = Annotation.Root({
+    visitCount:Annotation({
+        reducer:(_prev,next) => next,
+        default:() => 0
+    }),
+    message:Annotation({
+        reducer:(_prev,next) => next,
+        default:() => ''
+    })
+})
+
+function recordVisit(state){
+    const visitCount = state.visitCount + 1;
+
+    const message =  `这是你第${visitCount}次进入会话`
+
+    return{
+        visitCount,
+        message
+    }
+}
+
+const graph = new StateGraph(StateAnnotation).
+addNode("recordVisit",recordVisit).
+addEdge(START,"recordVisit").
+addEdge("recordVisit",END);
+
+const checkpointer = new MemorySaver();//内存保存器
+
+const App = graph.compile({
+    checkpointer
+})
+
+const user1 = {configurable : {thread_id:"用户_小张"}}
+
+const user2 = {configurable : {thread_id:"用户_小王"}}
+
+const res1 = await App.invoke({} , user1)
+console.log(res1);
+
+const res2 = await App.invoke({} , user2)
+console.log(res2);
+
+const res3 = await App.invoke({} , user1)
+console.log(res3);
+
+const res4 = await App.invoke({} , user2)
+console.log(res4);
+
+const res5 = await App.invoke({} , user1)
+console.log(res5);
+
+## harness 中断,恢复
+用到了interrupt():执行到这一行，**图直接暂停，退出本次 invoke**；等待外部人工输入，下一次用同一个 `thread_id` 调用 `app.stream/invoke` 恢复执行，`interrupt()` 的返回值就是你传入的人工输入。
+还要command专门恢复中断的
+// 演示的是 模拟 Agent在向用户请求权限的时候，如何记住上一次的状态
+import {
+    Annotation,Command,//定义共享数据长什么样子的，更新怎么合并
+    END,
+    interrupt,
+    MemorySaver,
+    START,
+    StateGraph//工作流蓝图构建器
+}from '@langchain/langgraph'
+
+import { createInterface } from "readline/promises";
+
+const StateAnnotation =  Annotation.Root({
+    actionSummary:Annotation({
+        reducer:(_prev,next) => next,
+        default:() => ''
+    }),
+    useInput:Annotation({
+        reducer:(_prev , next) => next,
+        default:() => ''
+    })
+})
+
+// 节点
+const showTransfer = () => {
+    return{actionSummary: "向张三转钱 100块"}
+}
+
+const waitConfirm = (state) => {
+    const text = interrupt({//中断,langgraph中特有的
+        hint:"终端里输入[确认]或者备注后回车",
+        actionSummary:state.actionSummary
+    })
+    return {useInput:String(text)}
+}
+
+
+const graph = new StateGraph(StateAnnotation).addNode("showTransfer", showTransfer)
+  .addNode("waitConfirm", waitConfirm)
+  .addEdge(START, "showTransfer")
+  .addEdge("showTransfer", "waitConfirm")
+  .addEdge("waitConfirm", END)
+  .compile({checkpointer:new MemorySaver()})
+
+const drawable = await graph.getGraphAsync();
+const mermaid = drawable.drawMermaid({ withStyles: true });
+console.log(mermaid);
+
+const config = {configurable : {thread_id : "user1"}}
+
+const paused = await graph.invoke({},config)
+
+console.log("待确认",paused.__interrupt__?.[0]?.value);
+
+const rl = createInterface({
+    input:process.stdin,
+    output:process.stdout
+})
+
+const line = (await rl.question(">")).trim();
+
+console.log("你输入了",line);
+
+rl.close();
+
+const done = await graph.invoke( new Command({resume:line}), config);
+
+console.log(done);
