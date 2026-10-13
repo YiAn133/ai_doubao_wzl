@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"html-text": "^1.0.1",
+		"epub2": "^3.0.2"
+	}
+}
