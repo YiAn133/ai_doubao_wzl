@@ -23,6 +23,7 @@ const model = new ChatOpenAI({
   },
   apiKey: process.env.OPENAI_API_KEY
 });
+
 const embeddings = new OpenAIEmbeddings({
   model: "text-embedding-v3",
   dimensions: 1024,
@@ -85,6 +86,7 @@ const routeQuestionNode = async (state) => {
   }
 }
 
+// 直接根据用户的问题 回答
 const directAnswerNode = async (state) => {
   console.log('----DIRECT_ANSWER----');
   process.stdout.write("\n [AI 回答（流式）] \n");
@@ -110,6 +112,7 @@ const directAnswerNode = async (state) => {
   }
 }
 
+// 根据RAG 返回上下文
 async function retrieveRelevantContent(question, k = TOP_K) {
   try {
     const docsWithScores = 
@@ -130,11 +133,13 @@ async function retrieveRelevantContent(question, k = TOP_K) {
   }
 }
 
+
 const DecomposeSchema = z.object({
   sub_questions: z.array(z.string()).min(1).max(8),
   reason: z.string()
 })
 
+// 将用户的问题，进行拆分
 // plan llm + prompt 
 // 给他身份 
 const decomposeQuestionNode = async (state) => {
@@ -171,6 +176,7 @@ const decomposeQuestionNode = async (state) => {
   }
 }
 
+// 将之前得到的文档，和当前查到的文档，进行合并，因为可能出现，文档重复的情况，从而导致AI输出有问题的情况
 const mergeUnique = (existingDocs, newDocs) => {
   // map key 可以是对象
   // has get 
@@ -185,6 +191,7 @@ const mergeUnique = (existingDocs, newDocs) => {
   return Array.from(map.values()).sort((a, b) => Number(b.score) - Number(a.score))
 }
 
+// 根据得到的RAG 生成上下文
 const retrieveNode = async (state) => {
   const subs = state.subQuestions ?? [];
   const idx = state.nextSubIdx ?? 0 ;
@@ -234,6 +241,7 @@ function afterPlan(state) {
   return state.strategy === "retrieve" ? "retrieve":"generate"
 }
 
+// 下一步要生成还是继续查询RAG
 const planNextStepNode = async (state) => {
   console.log("---PLAN_NEXT_STEP---");
   const subs = state.subQuestions ?? [];
@@ -286,6 +294,7 @@ const planNextStepNode = async (state) => {
   }
 }
 
+// 生成内容
 const generateNode = async (state) => {
   const context = state.documents
     .map((item, i) => `[片段 ${i+1}]
@@ -391,7 +400,7 @@ async function main () {
     if (!error.message.includes("already loaded")) {
       throw error
     }
-    console.log('集合已经处于加载zhaugntai');
+    console.log('集合已经处于加载状态');
   }
 
   const result = await graph.invoke({
