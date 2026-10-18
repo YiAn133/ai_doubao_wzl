@@ -185,7 +185,7 @@ const graph = new StateGraph(GraphState)
 const drawable = await graph.getGraphAsync();
 const mermaid = drawable.drawMermaid({ withStyles: true });
 console.log(mermaid);
-
+ 
 
 
 async function main () {
@@ -219,7 +219,7 @@ async function main () {
     if (!error.message.includes("already loaded")) {
       throw error
     }
-    console.log('集合已经处于加载zhaugntai');
+    console.log('集合已经处于加载状态');
   }
 
   const result = await graph.invoke({
