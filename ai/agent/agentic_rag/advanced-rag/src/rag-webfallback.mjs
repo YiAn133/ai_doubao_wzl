@@ -21,7 +21,7 @@ const GraphState = Annotation.Root({
   strategy: Annotation,
   routeReason: Annotation,
   // 召回
-  retrievedDocs: Annotation,
+  retrieveDocs: Annotation,
   localContext: Annotation, // RAG 上下文 
   webContext: Annotation, // 网络搜索上下文 
   evaluation: Annotation, // { enough, missing, reason}
@@ -47,6 +47,7 @@ const embeddings = new OpenAIEmbeddings({
 
 let vectorStore;
 
+// 这里是与向量数据库 进行检索得到上下文
 async function retrieveRelevantContent(question, k = TOP_K) {
   try {
     const docsWithScores = 
@@ -177,7 +178,7 @@ const generateNode = async (state) => {
   // webContext
   console.log("---GENERATE---");
   const context = [state.localContext, state.webContext]
-    .filter(Boolean)// Boolean 函数
+    .filter(Boolean)// Boolean 函数，简写实际上是 item => Boolean(item)
     .join("\n\n==联网补充==\n\n");
   process.stdout.write("\n[AI 回答(流式)]\n");
   let generation = "";
@@ -266,7 +267,7 @@ async function bochaWebSearch(query, count) {
   }
   console.log(json, "///////////");
   const webpages = json.data.webPages?.value ?? [];
-  if (webpages.length) {
+  if (!webpages.length) {
     return "未找到相关结果。"
   }
 
