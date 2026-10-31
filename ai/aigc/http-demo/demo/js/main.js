@@ -1,11 +1,18 @@
 // url + method + http 版本号 请求行 
 const endpoint = 
     'https://api.deepseek.com/chat/completions';
+// 浏览器里没有环境变量，key 存在 localStorage，避免写死在代码里提交到仓库
+// 首次使用：F12 控制台执行 localStorage.setItem('DEEPSEEK_API_KEY', 'sk-xxx')
+const apiKey = localStorage.getItem('DEEPSEEK_API_KEY');
+if (!apiKey) {
+    throw new Error('缺少 DEEPSEEK_API_KEY，请先在控制台执行 localStorage.setItem("DEEPSEEK_API_KEY", "sk-xxx")');
+}
+
 // headers 请求头
 const headers = {
     'Content-Type': 'application/json',
     // api key 通过 带上
-    Authorization: `Bearer sk-732bfc26579d4ea9a801bfe837740b62`
+    Authorization: `Bearer ${apiKey}`
 }
 
 // 请求体
