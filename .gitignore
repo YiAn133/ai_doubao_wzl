@@ -18,6 +18,8 @@ credentials*
 .mcp.json
 
 # ===== 日志与缓存 =====
+__pycache__/
+*.pyc
 *.log
 npm-debug.log*
 yarn-debug.log*
