@@ -36,7 +36,7 @@ async function create_es() {
             note_title: '夜跑复盘',
             note_body: '今天夜跑5公里， 配速稳定， 结束后做了拉伸。',
             tags: ['运动', '夜跑'],
-            mod: 'focused',
+            mood: 'focused',
             priority: 2,
             created_at: now,
             updated_at: now
