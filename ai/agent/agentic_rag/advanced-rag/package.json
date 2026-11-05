@@ -21,6 +21,7 @@
     "epub2": "^3.0.2",
     "html-text": "^1.0.1",
     "html-to-text": "^10.0.1",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "@elastic/elasticsearch":"^8.19.2"
   }
 }
