@@ -18,3 +18,8 @@ Agentic
 
 
 ## Rerank重排模型
+通过自定义可以创建Rerank模型 继承@langchain中的基类 BaseDocumentCompressor
+写构造函数，里面传apikey等
+记住里面的函数是 接收documents query
+返回 靠fetch json得到的数据中 body.output.results 包含的index 与document进行返回
+
