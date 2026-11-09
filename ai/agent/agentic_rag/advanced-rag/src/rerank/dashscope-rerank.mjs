@@ -11,7 +11,7 @@ export class DashScopeRerank extends BaseDocumentCompressor {
     this.baseUrl = baseUrl ?? process.env.RERANK_URL;
   }
 
-  async compressDocuments(documents, query, _callbacks) {
+  async compressDocuments(documents, query) {
     const res = await fetch(this.baseUrl, {
       method: "POST",
       headers: {

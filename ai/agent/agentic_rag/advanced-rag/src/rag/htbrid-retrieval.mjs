@@ -21,6 +21,7 @@ const embeddings = new OpenAIEmbeddings({
     baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1"
   }
 });
+
 const milvus = await Milvus.fromExistingCollection(embeddings, {
   url: "http://localhost:19530",
   collectionName: INDEX,
@@ -53,6 +54,7 @@ const HybridRetrievalState = Annotation.Root({
   topDocuments: Annotation(),
   answer: Annotation()
 });
+
 // 接收 ES 查询结果， 拼接字符串
 function docFromEsHit(hit) {
   const s = hit._source ?? {};
@@ -74,6 +76,8 @@ function merge(esDocs, milvusDocs) {
   
   return dedupeDocsById(combinded);
 }
+
+// 遍历一个文档，根据id去从
 function dedupeDocsById(docs) {
   const seen = new Set();
   const output = [];
@@ -87,6 +91,7 @@ function dedupeDocsById(docs) {
   }
   return output
 }
+
 // 调试结果
 function printDocs(label, docs) {
   console.log(`\n=== ${label} ($(docs?.length ?? 0)条) ===`)
