@@ -123,7 +123,7 @@ const milvusClient = new MilvusClient({
 const seedElasticSearch = async (indexName, rows) => {
   try {
     console.log('\n [ ElasticSearch ]');
-    const client = new Client({ node: ES_NODE })
+    const client = new Client({node:ES_NODE})
     const exists = await client.indices.exists({
       index: indexName
     });

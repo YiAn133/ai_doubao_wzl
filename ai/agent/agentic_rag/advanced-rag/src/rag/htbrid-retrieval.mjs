@@ -55,7 +55,7 @@ const HybridRetrievalState = Annotation.Root({
   answer: Annotation()
 });
 
-// 接收 ES 查询结果， 拼接字符串
+// 接收 ES 查询结果， 生成document数组
 function docFromEsHit(hit) {
   const s = hit._source ?? {};
   const text = [s.note_title ?? s.title, s.note_body ?? s.content]
