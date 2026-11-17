@@ -79,8 +79,24 @@ export const ragApp = workflow.compile();
 
 export async function ask(question) {
   const result = await ragApp.invoke({question});
+  
   return {
     answer: result.answer,
     context: result.context ?? []
   }
+}
+
+export async function* askStream(question){
+  const docs = await retriever.invoke(question)
+  const context = docs.map((d) => {
+      return d.pageContent
+  }).join(",")
+  const chunks = await chain.stream({
+    question:question,
+    context:context
+  })
+  for await (let chunk of chunks){
+    yield chunk
+  }
+  
 }

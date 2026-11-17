@@ -1,6 +1,7 @@
 // command line
 import "dotenv/config";
 import { ask } from "./rag_agent.mjs"
+import { askStream } from "./rag_agent.mjs";
 
 const DEFAULT_QUESTIONS = [
   "无理由退货要在几天内？"
@@ -15,8 +16,9 @@ for (let i = 0; i < questions.length; i++) {
   const question = questions[i];
   console.log(`问题 ${i + 1}: ${question}`)
 
-  const { answer, context } = await ask(question);
-  console.log(answer);
+  for await(let chunk of askStream(question)){
+    process.stdout.write(chunk)
+  }
   console.log("-----------------");
   // console.log(context);
 }
