@@ -98,5 +98,5 @@ async function expectDenied(label, prompt) {
 //   "write_file 创建 /todo.md（三条待办）, edit_file 把一条标为完成, ls /, 一句话总结"
 // );
 
-// await expectDenied("禁止读", "只调用 read_file, 路径 /secret.txt ");
-await expectDenied("禁止写", "只调用 write_file, 路径 /hack.txt, 内容 text。")
+await expectDenied("禁止读", "只调用 read_file, 路径 /secret.txt ");
+// await expectDenied("禁止写", "只调用 write_file, 路径 /hack.txt, 内容 text。")
